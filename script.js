@@ -35,11 +35,10 @@ function checkKey(e) {
     // right arrow
     dir = "right";
   }
-  move(dir);
+  move(dir, true);
 }
 
 function checkMerge(array) {
-  console.log(`checkMerge start = ${array}`);
   for (let i = 0; i < array.length; i++) {
     if (array[i] !== 0) {
       if (array[i] === array[i + 1]) {
@@ -48,23 +47,20 @@ function checkMerge(array) {
       }
     }
   }
-  console.log(`checkMerge end = ${array}`);
   return array;
 }
 
 function gravity(array) {
-  console.log(`gravity start = ${array}`);
   for (let i = array.length; i >= 0; i--) {
     if (array[i] === 0) {
       array.splice(i, 1);
       array.push(0);
     }
   }
-  console.log(`gravity end = ${array}`);
   return array;
 }
 
-function move(dir) {
+function move(dir, playerMove) {
   let hasMove = false;
   if (dir === "up" || dir === "down") {
     for (let i = 0; i < gridSize; i++) {
@@ -103,11 +99,14 @@ function move(dir) {
       }
     }
   }
-  if (hasMove) sprawn(); // to add condition to check if sprawn is allowed
+  if (playerMove) {
+    if (hasMove) sprawn();
+    else if (checkEmptyTile().length === 0) gameOverCheck();
+  } else {
+    return hasMove;
+  }
 }
-
-function sprawn() {
-  // select empty tiles and increase the value of 1 tile at random. updates tileArray and calls updateBoard function
+function checkEmptyTile() {
   let emptyTileArray = [];
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
@@ -116,16 +115,20 @@ function sprawn() {
       }
     }
   }
-  if (emptyTileArray.length === 0) gameOverCheck();
+  return emptyTileArray;
+}
+
+function sprawn() {
+  // select empty tiles and increase the value of 1 tile at random. updates tileArray and calls updateBoard function
+  let emptyTileArray = checkEmptyTile();
+  //   if (emptyTileArray.length === 0) gameOverCheck();
   let randomIndex = Math.floor(Math.random() * emptyTileArray.length);
   let sprawnTile = emptyTileArray[randomIndex];
   tileArray[sprawnTile[0]][sprawnTile[1]]++;
-  console.log(`sprawned at y=${sprawnTile[0]} and x=${sprawnTile[1]}`);
   updateBoard();
 }
 
 function updateBoard() {
-  console.log(`Board graphics will be updated`);
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
       if (tileArray[y][x] != 0)
@@ -140,7 +143,12 @@ function updateBoard() {
 
 function gameOverCheck() {
   // checks if any moves are possible, otherwise game over
-  alert("GAME OVER!");
+  let possibleToMove = false;
+  let moves = ["up", "down", "left", "right"];
+  for (let i = 0; i < moves.length; i++) {
+    if (move(moves[i], false)) possibleToMove = true;
+  }
+  if (possibleToMove == false) alert("GAME OVER!");
 }
 
 //----------MAIN----------//
@@ -161,4 +169,3 @@ for (let y = 0; y < gridSize; y++) {
 document.onkeydown = checkKey;
 // sprawn initial tile
 sprawn();
-console.table(tileArray);
