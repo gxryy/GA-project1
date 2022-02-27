@@ -20,7 +20,7 @@ Logic flow
 
 
 Functions: 
-	- createDiv (y,x) 
+	- CreateDiv (y,x) 
 		○ Use DOM to create element
 		○ Set innertext to 0
 		○ Set class to tile

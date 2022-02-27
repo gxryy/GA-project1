@@ -12,13 +12,27 @@ function createDiv(y, x) {
   tile.className = "tile";
   tile.id = `tile${y}${x}`;
   document.querySelector(".board").append(tile);
+}
 
-  //   console.log(`div to be created for y:${y} and x:${x}`);
+function checkKey(e) {
+  if (e.keyCode == "38") {
+    // up arrow
+    console.log(`UP arrow pressed`);
+  } else if (e.keyCode == "40") {
+    // down arrow
+    console.log(`DOWN arrow pressed`);
+  } else if (e.keyCode == "37") {
+    // left arrow
+    console.log(`LEFT arrow pressed`);
+  } else if (e.keyCode == "39") {
+    // right arrow
+    console.log(`RIGHT arrow pressed`);
+  }
 }
 
 //----------MAIN----------//
 
-// setting css columns to match gridSize
+// Setting css columns to match gridSize
 document.querySelector(".board").style[
   "grid-template-columns"
 ] = `repeat(${gridSize}, 1fr)`;
@@ -29,3 +43,6 @@ for (let y = 0; y < gridSize; y++) {
     createDiv(y, x);
   }
 }
+
+// Add event listeners for keyboard events
+document.onkeydown = checkKey;
