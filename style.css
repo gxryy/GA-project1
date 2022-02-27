@@ -1,0 +1,36 @@
+:root {
+  text-align: center;
+}
+
+.header {
+  background-color: azure;
+  height: 10vh;
+}
+
+.main {
+  background-color: beige;
+  height: 70vh;
+}
+.board {
+  background-color: bisque;
+  display: grid;
+  /*  grid-template-columns:  set by js under */
+  padding: 1em;
+  grid-gap: 1em;
+  margin: auto;
+  width: 60vh;
+  height: 60vh;
+}
+.footer {
+  background-color: darkgrey;
+  height: 10vh;
+}
+.tile {
+  border: 1px solid black;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  font-size: 1.3em;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
