@@ -61,6 +61,13 @@ function sprawn() {
 
 function updateBoard() {
   console.log(`Board graphics will be updated`);
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      if (tileArray[y][x] != 0)
+        document.querySelector(`#tile${y}${x}`).innerText =
+          2 ** tileArray[y][x];
+    }
+  }
 }
 
 //----------MAIN----------//
