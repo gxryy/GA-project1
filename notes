@@ -1,0 +1,53 @@
+Game Logic => 4x4 board where a lv 1 tile sprawn at random after each move
+			Tiles merge in the direction of move if both tiles have the same value.
+			Tiles are shifted towards the side of the board in the direction of move
+			Win when tiles hits 2048 and lose when sprawn fails 
+			
+			
+Variable handling => adopting 2D array to track position of tiles and its values
+				tileArray[y][x] = level  where x grows horizontally to the right and.y increaseds vertically downwards.
+				[ [0, 2, 4, 1],
+				   [1, 4, 1, 2],
+				   [4, 4, 6, 1],
+				   [3, 4, 1, 0] ]
+				Each tile div has a class of tile and a unique  ID of #tile[y][x]
+				
+Logic flow 
+	- Form 4 by 4 grid with nested for loops and execute createDiv(y,x)
+	- Add eventlisteners for arrow key events and call move('key')
+	- Sprawn initial tile with sprawn()
+	- Upon key press, move()
+
+
+Functions: 
+	- createDiv (y,x) 
+		○ Use DOM to create element
+		○ Set innertext to 0
+		○ Set class to tile
+		○ Set id to tile+y+x
+		○ Append to board
+	- Sprawn()
+		○ Nest loop through tileArray and copy values of 0 + coords to emptyCellArray
+		○ If emptyCellArray !=0, random the length of it 
+		○ Update the tileArray value with coords in emptyCellArray 
+		○ updateBoard()
+	- updateBoard()
+		○ Nest loop through tileArray to get the level of each tile.
+		○ While in loop, use DOM to update the value of each tile div
+	- Move('direction')
+		○ Different directions requires different methods to get direction array (array in the sequence of direction)
+		○ For each column/row, get directionArray
+			§ directionArray = checkMerge(directionArray)
+			§ directionArray = gravity(directionArray)
+			§ Update tileArray with respective directionArray
+		○ Sprawn()
+		○ updateBoard()
+	- checkMerge(array)
+		○ For I < array length
+			§ If array[i] == array[i+1]
+				□ Array[i]++
+				□ Array[i+1]=0
+	- Gravity(array)
+		○ For I < array length
+		○ If array[i]=0 
+            Splice? The 0 away and
