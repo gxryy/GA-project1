@@ -65,6 +65,7 @@ function gravity(array) {
 }
 
 function move(dir) {
+  let hasMove = false;
   if (dir === "up" || dir === "down") {
     for (let i = 0; i < gridSize; i++) {
       //loop through adjacent directions
@@ -79,6 +80,7 @@ function move(dir) {
       directionArray = gravity(directionArray);
       if (dir === "down") directionArray.reverse();
       for (let j = 0; j < gridSize; j++) {
+        if (tileArray[j][i] != directionArray[j]) hasMove = true;
         tileArray[j][i] = directionArray[j];
       }
     }
@@ -96,12 +98,12 @@ function move(dir) {
       directionArray = gravity(directionArray);
       if (dir === "right") directionArray.reverse();
       for (let j = 0; j < gridSize; j++) {
+        if (tileArray[i][j] != directionArray[j]) hasMove = true;
         tileArray[i][j] = directionArray[j];
       }
     }
   }
-
-  sprawn(); // to add condition to check if sprawn is allowed
+  if (hasMove) sprawn(); // to add condition to check if sprawn is allowed
 }
 
 function sprawn() {
@@ -114,6 +116,7 @@ function sprawn() {
       }
     }
   }
+  if (emptyTileArray.length === 0) gameOverCheck();
   let randomIndex = Math.floor(Math.random() * emptyTileArray.length);
   let sprawnTile = emptyTileArray[randomIndex];
   tileArray[sprawnTile[0]][sprawnTile[1]]++;
@@ -133,6 +136,11 @@ function updateBoard() {
       else console.log(`error in update board`);
     }
   }
+}
+
+function gameOverCheck() {
+  // checks if any moves are possible, otherwise game over
+  alert("GAME OVER!");
 }
 
 //----------MAIN----------//
