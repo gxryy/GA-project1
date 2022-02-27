@@ -35,12 +35,73 @@ function checkKey(e) {
     // right arrow
     dir = "right";
   }
-
   move(dir);
 }
 
+function checkMerge(array) {
+  console.log(`checkMerge start = ${array}`);
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== 0) {
+      if (array[i] === array[i + 1]) {
+        array[i]++;
+        array[i + 1] = 0;
+      }
+    }
+  }
+  console.log(`checkMerge end = ${array}`);
+  return array;
+}
+
+function gravity(array) {
+  console.log(`gravity start = ${array}`);
+  for (let i = array.length; i >= 0; i--) {
+    if (array[i] === 0) {
+      array.splice(i, 1);
+      array.push(0);
+    }
+  }
+  console.log(`gravity end = ${array}`);
+  return array;
+}
+
 function move(dir) {
-  console.log(`Direction ${dir}`);
+  if (dir === "up" || dir === "down") {
+    for (let i = 0; i < gridSize; i++) {
+      //loop through adjacent directions
+      let directionArray = [];
+      for (let j = 0; j < gridSize; j++) {
+        directionArray.push(tileArray[j][i]);
+      }
+      if (dir === "down") directionArray.reverse();
+
+      directionArray = gravity(directionArray);
+      directionArray = checkMerge(directionArray);
+      directionArray = gravity(directionArray);
+      if (dir === "down") directionArray.reverse();
+      for (let j = 0; j < gridSize; j++) {
+        tileArray[j][i] = directionArray[j];
+      }
+    }
+  } else if (dir === "left" || dir === "right") {
+    for (let i = 0; i < gridSize; i++) {
+      //loop through adjacent directions
+      let directionArray = [];
+      for (let j = 0; j < gridSize; j++) {
+        directionArray.push(tileArray[i][j]);
+      }
+      if (dir === "right") directionArray.reverse();
+
+      directionArray = gravity(directionArray);
+      directionArray = checkMerge(directionArray);
+      directionArray = gravity(directionArray);
+      if (dir === "right") directionArray.reverse();
+      for (let j = 0; j < gridSize; j++) {
+        tileArray[i][j] = directionArray[j];
+      }
+    }
+  }
+
+  sprawn(); // to add condition to check if sprawn is allowed
 }
 
 function sprawn() {
@@ -56,6 +117,7 @@ function sprawn() {
   let randomIndex = Math.floor(Math.random() * emptyTileArray.length);
   let sprawnTile = emptyTileArray[randomIndex];
   tileArray[sprawnTile[0]][sprawnTile[1]]++;
+  console.log(`sprawned at y=${sprawnTile[0]} and x=${sprawnTile[1]}`);
   updateBoard();
 }
 
@@ -66,6 +128,9 @@ function updateBoard() {
       if (tileArray[y][x] != 0)
         document.querySelector(`#tile${y}${x}`).innerText =
           2 ** tileArray[y][x];
+      else if (tileArray[y][x] == 0)
+        document.querySelector(`#tile${y}${x}`).innerText = "";
+      else console.log(`error in update board`);
     }
   }
 }
