@@ -5,7 +5,9 @@
 let gridSize = 4;
 let tileArray = []; // 2D array to reflect the value of each tile
 let winningLevel = 11; //  11-2048   10-1024   9-512   8-256   7-128   6-64
-const banner = document.querySelector("#banner");
+let moveCounter = 0; //move counter
+let score = 0; // score counter
+const banner = document.querySelector("#banner"); //banner is used to display winner or game over message
 
 //----------FUNCTIONS----------//
 
@@ -37,22 +39,27 @@ function checkKey(e) {
     // right arrow
     dir = "right";
   }
-  move(dir, true);
+  move(dir, true); // calls move function with the respective direction. 2nd arg = true as it is from a keyboard event
 }
 
 function checkMerge(array) {
+  // check if the input array has adjacent elements of the same value
   for (let i = 0; i < array.length; i++) {
     if (array[i] !== 0) {
+      // not appliable to level 0
       if (array[i] === array[i + 1]) {
-        array[i]++;
-        array[i + 1] = 0;
+        // if current element has the same value as next element
+        array[i]++; // increase the level of current element
+        array[i + 1] = 0; // remove the next element
+        score += 2 ** array[i]; // update the score as there is a merge
       }
     }
   }
-  return array;
+  return array; // returns the 'merged' array
 }
 
 function gravity(array) {
+  // flushes input array by removing and pushing 0s to end of array
   for (let i = array.length; i >= 0; i--) {
     if (array[i] === 0) {
       array.splice(i, 1);
@@ -63,55 +70,50 @@ function gravity(array) {
 }
 
 function move(dir, playerMove) {
-  let hasMove = false;
-  if (dir === "up" || dir === "down") {
-    for (let i = 0; i < gridSize; i++) {
-      //loop through adjacent directions
-      let directionArray = [];
-      for (let j = 0; j < gridSize; j++) {
-        directionArray.push(tileArray[j][i]);
-      }
-      if (dir === "down") directionArray.reverse();
+  // this function takes the input of the move and check if it is a player move or computer move
+  let hasMove = false; // hasMove is to determine if there is a change in tile positions after the move.
 
-      directionArray = gravity(directionArray);
-      directionArray = checkMerge(directionArray);
-      directionArray = gravity(directionArray);
-      if (dir === "down") directionArray.reverse();
-      for (let j = 0; j < gridSize; j++) {
-        if (tileArray[j][i] != directionArray[j]) hasMove = true;
-        tileArray[j][i] = directionArray[j];
-      }
+  for (let i = 0; i < gridSize; i++) {
+    //loop through adjacent directions
+    let directionArray = []; // directionArray refers to the single column or row of levels
+    for (let j = 0; j < gridSize; j++) {
+      if (dir === "up" || dir === "down") directionArray.push(tileArray[j][i]);
+      //directionArray set to read columns for updown directions
+      else if (dir === "left" || dir === "right")
+        directionArray.push(tileArray[i][j]); // directionArray set to read rows for leftright directions
     }
-  } else if (dir === "left" || dir === "right") {
-    for (let i = 0; i < gridSize; i++) {
-      //loop through adjacent directions
-      let directionArray = [];
-      for (let j = 0; j < gridSize; j++) {
-        directionArray.push(tileArray[i][j]);
-      }
-      if (dir === "right") directionArray.reverse();
-
-      directionArray = gravity(directionArray);
-      directionArray = checkMerge(directionArray);
-      directionArray = gravity(directionArray);
-      if (dir === "right") directionArray.reverse();
-      for (let j = 0; j < gridSize; j++) {
+    if (dir === "down" || dir === "right") directionArray.reverse(); // reversing the array to checkMerge and gravity if right/down
+    directionArray = gravity(directionArray);
+    directionArray = checkMerge(directionArray);
+    directionArray = gravity(directionArray);
+    if (dir === "down" || dir === "right") directionArray.reverse(); // reversing it back
+    for (let j = 0; j < gridSize; j++) {
+      if (dir === "up" || dir === "down") {
+        if (tileArray[j][i] != directionArray[j]) hasMove = true; // setting the hasmove condition if there is tile movement
+        tileArray[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
+      } else if (dir === "left" || dir === "right") {
         if (tileArray[i][j] != directionArray[j]) hasMove = true;
-        tileArray[i][j] = directionArray[j];
+        tileArray[i][j] = directionArray[j]; // similar, leftright
       }
     }
   }
+
   if (playerMove) {
+    // if its a player move
     if (hasMove) {
-      sprawn();
-      winnerCheck();
-    } else if (checkEmptyTile().length === 0) gameOverCheck();
+      // and move is valid
+      moveCounter++; // increse move counter
+      sprawn(); // sprawn a new tile
+      winnerCheck(); // check if there are any winning tiles
+    } else if (checkEmptyTile().length === 0) gameOverCheck(); //if there are no empty tiles, execute gameOverCheck
   } else {
-    return hasMove;
+    // if its a computer move
+    return hasMove; // return if there is move or not
   }
 }
 
 function checkEmptyTile() {
+  // checks for empty tiles
   let emptyTileArray = [];
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
@@ -126,14 +128,14 @@ function checkEmptyTile() {
 function sprawn() {
   // select empty tiles and increase the value of 1 tile at random. updates tileArray and calls updateBoard function
   let emptyTileArray = checkEmptyTile();
-  //   if (emptyTileArray.length === 0) gameOverCheck();
   let randomIndex = Math.floor(Math.random() * emptyTileArray.length);
   let sprawnTile = emptyTileArray[randomIndex];
-  tileArray[sprawnTile[0]][sprawnTile[1]]++;
+  tileArray[sprawnTile[0]][sprawnTile[1]]++; // increase level of tile
   updateBoard();
 }
 
 function updateBoard() {
+  // updates moves and score and 'redraws' the board with reference to tileArray
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
       if (tileArray[y][x] != 0)
@@ -144,6 +146,8 @@ function updateBoard() {
       else console.log(`error in update board`);
     }
   }
+  document.querySelector("#moves").innerText = moveCounter; // update moveCounter
+  document.querySelector("#score").innerText = score; //update score
 }
 
 function gameOverCheck() {
@@ -160,6 +164,7 @@ function gameOverCheck() {
 }
 
 function winnerCheck() {
+  // check for winner by looping through tileArray
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
       if (tileArray[i][j] >= winningLevel) {
@@ -171,6 +176,7 @@ function winnerCheck() {
 }
 
 function setUpBoard() {
+  //set up board based on tile selection, adds key listeners and sprawn initial tile
   let board = document.querySelector(".board");
   // clears the existing board
   while (board.firstChild) {
@@ -191,14 +197,17 @@ function setUpBoard() {
   document.onkeydown = checkKey;
   // sprawn initial tile
   sprawn();
-  console.log(`winningLevel = ${winningLevel}`);
 }
 
 function toggleSettings() {
+  // display and remove the settings panel. sets the respective settings
+  // changing existing listener to close panel instead
   settings.removeEventListener("click", toggleSettings);
   settings.addEventListener("click", removeSettingsPage);
+  // new setting div with id settingpage
   let settingPage = document.createElement("div");
   settingPage.id = "settingpage";
+
   let gridDiv = document.createElement("div");
   let gridLabel = (document.createElement("p").innerText = "Grid Size:");
   let gridSelectorDiv = document.createElement("div");
@@ -243,6 +252,7 @@ function toggleSettings() {
   set.id = "setDiv";
   set.innerText = "SET";
   set.addEventListener("click", () => {
+    document.querySelector("#goal").innerText = 2 ** winningLevel;
     setUpBoard();
   });
   settingPage.append(set);
