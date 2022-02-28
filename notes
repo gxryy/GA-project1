@@ -31,7 +31,7 @@ Functions:
 		○ If emptyCellArray !=0, random the length of it 
 		○ Update the tileArray value with coords in emptyCellArray 
 		○ updateBoard()
-	- updateBoard()
+	- UpdateBoard()
 		○ Nest loop through tileArray to get the level of each tile.
 		○ While in loop, use DOM to update the value of each tile div
 	- Move('direction')
@@ -42,7 +42,7 @@ Functions:
 			§ Update tileArray with respective directionArray
 		○ Sprawn()
 		○ updateBoard()
-	- checkMerge(array)
+	- CheckMerge(array)
 		○ For I < array length
 			§ If array[i] == array[i+1]
 				□ Array[i]++
@@ -50,4 +50,6 @@ Functions:
 	- Gravity(array)
 		○ For I < array length
 		○ If array[i]=0 
-            Splice? The 0 away and
+            Splice? The 0 away and push a new 0 to end of array
+	- CheckKey(e)
+		○ checks the key pressed	

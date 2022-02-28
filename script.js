@@ -4,6 +4,8 @@
 
 let gridSize = 4;
 let tileArray = []; // 2D array to reflect the value of each tile
+let winningLevel = 11; //  11-2048   10-1024   9-512   8-256   7-128   6-64
+const banner = document.querySelector("#banner");
 
 //----------FUNCTIONS----------//
 
@@ -100,12 +102,15 @@ function move(dir, playerMove) {
     }
   }
   if (playerMove) {
-    if (hasMove) sprawn();
-    else if (checkEmptyTile().length === 0) gameOverCheck();
+    if (hasMove) {
+      sprawn();
+      winnerCheck();
+    } else if (checkEmptyTile().length === 0) gameOverCheck();
   } else {
     return hasMove;
   }
 }
+
 function checkEmptyTile() {
   let emptyTileArray = [];
   for (let y = 0; y < gridSize; y++) {
@@ -148,7 +153,21 @@ function gameOverCheck() {
   for (let i = 0; i < moves.length; i++) {
     if (move(moves[i], false)) possibleToMove = true;
   }
-  if (possibleToMove == false) alert("GAME OVER!");
+  if (possibleToMove == false) {
+    banner.querySelector("#bannerText").innerText = "GAME OVER!";
+    banner.style.display = "block";
+  }
+}
+
+function winnerCheck() {
+  for (let i = 0; i < gridSize; i++) {
+    for (let j = 0; j < gridSize; j++) {
+      if (tileArray[i][j] >= winningLevel) {
+        banner.querySelector("#bannerText").innerText = "WINNER";
+        banner.style.display = "block";
+      } else continue;
+    }
+  }
 }
 
 //----------MAIN----------//

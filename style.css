@@ -34,3 +34,16 @@
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
+
+#banner {
+  display: none;
+  background-color: white;
+  position: absolute;
+  top: 33%;
+  width: 100%;
+  font-size: 5em;
+  line-height: 0;
+  letter-spacing: 0.2em;
+  font-family: Arial, Helvetica, sans-serif;
+  opacity: 90%;
+}
