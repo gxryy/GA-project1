@@ -170,21 +170,95 @@ function winnerCheck() {
   }
 }
 
-//----------MAIN----------//
-
-// Setting css columns to match gridSize
-document.querySelector(".board").style[
-  "grid-template-columns"
-] = `repeat(${gridSize}, 1fr)`;
-
-//Creating new div for each tile
-for (let y = 0; y < gridSize; y++) {
-  for (let x = 0; x < gridSize; x++) {
-    createDiv(y, x);
+function setUpBoard() {
+  let board = document.querySelector(".board");
+  // clears the existing board
+  while (board.firstChild) {
+    board.removeChild(board.firstChild);
   }
+
+  // Setting css columns to match gridSize
+  board.style["grid-template-columns"] = `repeat(${gridSize}, 1fr)`;
+
+  //Creating new div for each tile
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      createDiv(y, x);
+    }
+  }
+
+  // Add event listeners for keyboard events
+  document.onkeydown = checkKey;
+  // sprawn initial tile
+  sprawn();
+  console.log(`winningLevel = ${winningLevel}`);
 }
 
-// Add event listeners for keyboard events
-document.onkeydown = checkKey;
-// sprawn initial tile
-sprawn();
+function toggleSettings() {
+  settings.removeEventListener("click", toggleSettings);
+  settings.addEventListener("click", removeSettingsPage);
+  let settingPage = document.createElement("div");
+  settingPage.id = "settingpage";
+  let gridDiv = document.createElement("div");
+  let gridLabel = (document.createElement("p").innerText = "Grid Size:");
+  let gridSelectorDiv = document.createElement("div");
+  gridSelectorDiv.style.display = "flex";
+  gridSelectorDiv.className = "selectorDiv";
+  for (let i = 3; i <= 8; i++) {
+    let box = document.createElement("div");
+    box.className = "setting-selector";
+    box.innerText = i;
+    box.display = "inline";
+    box.addEventListener("click", (event) => {
+      gridSize = event.target.innerText;
+    });
+    gridSelectorDiv.append(box);
+  }
+  gridDiv.append(gridLabel);
+  gridDiv.append(gridSelectorDiv);
+  settingPage.append(gridDiv);
+
+  let winScoreDiv = document.createElement("div");
+  let winScoreLabel = (document.createElement("p").innerText =
+    "Winning Score:");
+  let winScoreSelectorDiv = document.createElement("div");
+  winScoreSelectorDiv.style.display = "flex";
+  winScoreSelectorDiv.className = "selectorDiv";
+  for (let i = 6; i <= 13; i++) {
+    let box = document.createElement("div");
+    box.className = "setting-selector";
+    box.innerText = 2 ** i;
+    box.display = "inline";
+    box.addEventListener("click", (event) => {
+      let winningScore = event.target.innerText;
+      winningLevel = Math.log(winningScore) / Math.log(2);
+    });
+    winScoreSelectorDiv.append(box);
+  }
+  winScoreDiv.append(winScoreLabel);
+  winScoreDiv.append(winScoreSelectorDiv);
+  settingPage.append(winScoreDiv);
+
+  let set = document.createElement("div");
+  set.id = "setDiv";
+  set.innerText = "SET";
+  set.addEventListener("click", () => {
+    setUpBoard();
+  });
+  settingPage.append(set);
+  document.querySelector("#statusbar").append(settingPage);
+}
+
+function removeSettingsPage() {
+  settings.removeEventListener("click", removeSettingsPage);
+  document.querySelector("#settingpage").remove();
+  settings.addEventListener("click", toggleSettings);
+}
+//----------MAIN----------//
+
+// add handling for settings
+const statusBar = document.querySelector("#statusbar");
+const settings = document.querySelector("#settings");
+settings.addEventListener("click", toggleSettings);
+
+setUpBoard();
