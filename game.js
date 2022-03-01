@@ -9,6 +9,7 @@ let moveCounter = 0; //move counter
 let score = 0; // score counter
 let currentGame = { moves: 0, score: 0, goal: 0, tileArray: 0 };
 let highScoreArray = [];
+let prevTileArray = [];
 const localStorage = window.localStorage;
 const localGame = localStorage.currentGame;
 const localHighscore = localStorage.highScore;
@@ -32,20 +33,25 @@ function createDiv(y, x, value) {
 function checkKey(e) {
   // check the keyvalue of event and call move function
   let dir = "";
-  if (e.keyCode == "38") {
+  if (e.key == "ArrowUp") {
     // up arrow
     dir = "up";
-  } else if (e.keyCode == "40") {
+  } else if (e.key == "ArrowDown") {
     // down arrow
     dir = "down";
-  } else if (e.keyCode == "37") {
+  } else if (e.key == "ArrowLeft") {
     // left arrow
     dir = "left";
-  } else if (e.keyCode == "39") {
+  } else if (e.key == "ArrowRight") {
     // right arrow
     dir = "right";
+  } else if (e.keyCode == "32") {
+    //space button
+    undo();
   }
-  move(dir, true); // calls move function with the respective direction. 2nd arg = true as it is from a keyboard event
+
+  if (dir) move(dir, true);
+  // calls move function with the respective direction. 2nd arg = true as it is from a keyboard event
 }
 
 function checkMerge(array) {
@@ -78,6 +84,7 @@ function gravity(array) {
 function move(dir, playerMove) {
   // this function takes the input of the move and check if it is a player move or computer move
   let hasMove = false; // hasMove is to determine if there is a change in tile positions after the move.
+  prevTileArray = JSON.parse(JSON.stringify(tileArray));
 
   for (let i = 0; i < gridSize; i++) {
     //loop through adjacent directions
@@ -329,6 +336,17 @@ function setHighScore() {
     highScoreArray[winningLevel] = score;
   localStorage.setItem("highScore", JSON.stringify(highScoreArray));
   getHighScore();
+}
+
+function undo() {
+  if (JSON.stringify(prevTileArray) == JSON.stringify(tileArray))
+    alert("Not allowed to consecutively do more than 1 undo!");
+  else {
+    tileArray = JSON.parse(JSON.stringify(prevTileArray));
+    moveCounter++;
+    score -= 500;
+    updateBoard();
+  }
 }
 //----------MAIN----------//
 
