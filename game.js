@@ -8,9 +8,10 @@ let winningLevel = 11; //  11-2048   10-1024   9-512   8-256   7-128   6-64
 let moveCounter = 0; //move counter
 let score = 0; // score counter
 let currentGame = { moves: 0, score: 0, goal: 0, tileArray: 0 };
+let highScoreArray = [];
 const localStorage = window.localStorage;
 const localGame = localStorage.currentGame;
-
+const localHighscore = localStorage.highScore;
 const banner = document.querySelector("#banner"); //banner is used to display winner or game over message
 const statusBar = document.querySelector("#statusbar");
 const settings = document.querySelector("#settings");
@@ -171,6 +172,8 @@ function gameOverCheck() {
   if (possibleToMove == false) {
     banner.querySelector("#bannerText").innerText = "GAME OVER!";
     banner.style.display = "block";
+    document.onkeydown = null;
+    setHighScore();
   }
 }
 
@@ -181,6 +184,8 @@ function winnerCheck() {
       if (tileArray[i][j] >= winningLevel) {
         banner.querySelector("#bannerText").innerText = "WINNER";
         banner.style.display = "block";
+        document.onkeydown = null;
+        setHighScore();
       } else continue;
     }
   }
@@ -207,6 +212,8 @@ function newGame() {
       createDiv(y, x, tileArray[y][x]);
     }
   }
+  //new function getHighScore() which gets highscore from local  and updates DOM
+  getHighScore();
 
   // sprawn initial tile
   sprawn();
@@ -297,14 +304,37 @@ function resumeGame() {
       createDiv(y, x, tileArray[y][x]);
     }
   }
+  getHighScore();
   updateBoard();
 }
+function getHighScore() {
+  let highScore = highScoreArray[winningLevel] || 0;
+  document.querySelector("#highscore").innerText = highScore;
+}
 
+function setHighScore() {
+  if (score > highScoreArray[winningLevel])
+    highScoreArray[winningLevel] = score;
+  localStorage.setItem("highScore", JSON.stringify(highScoreArray));
+  getHighScore();
+}
 //----------MAIN----------//
 
 // add handling for settings
 settings.addEventListener("click", toggleSettings);
 document.onkeydown = checkKey;
+
+if (
+  localHighscore === undefined ||
+  localHighscore === null ||
+  localHighscore.length === 0
+) {
+  console.log(`there is no local highscore`);
+  highScoreArray = new Array(20).fill(0);
+  localStorage.setItem("highScore", JSON.stringify(highScoreArray));
+} else {
+  highScoreArray = JSON.parse(localStorage.highScore);
+}
 
 if (localGame === undefined || localGame === null || localGame.length === 0) {
   newGame();
