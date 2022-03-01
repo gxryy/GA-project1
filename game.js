@@ -172,7 +172,9 @@ function gameOverCheck() {
   if (possibleToMove == false) {
     banner.querySelector("#bannerText").innerText = "GAME OVER!";
     banner.style.display = "block";
+    document.querySelector("#bannerScoreLabel").innerText = `Score: ${score}`;
     document.onkeydown = null;
+    document.querySelector("#replay").addEventListener("click", newGame);
     setHighScore();
   }
 }
@@ -182,9 +184,13 @@ function winnerCheck() {
   for (let i = 0; i < gridSize; i++) {
     for (let j = 0; j < gridSize; j++) {
       if (tileArray[i][j] >= winningLevel) {
-        banner.querySelector("#bannerText").innerText = "WINNER";
+        banner.querySelector("#bannerText").innerText = "YOU WIN!";
         banner.style.display = "block";
+        document.querySelector(
+          "#bannerScoreLabel"
+        ).innerText = `Score: ${score}`;
         document.onkeydown = null;
+        document.querySelector("#replay").addEventListener("click", newGame);
         setHighScore();
       } else continue;
     }
@@ -193,6 +199,9 @@ function winnerCheck() {
 
 function newGame() {
   //set up board based on tile selection, adds key listeners and sprawn initial tile
+  document.querySelector("#replay").removeEventListener("click", newGame);
+  document.onkeydown = checkKey;
+  banner.style.display = "none";
   // clears the existing board
   while (board.firstChild) {
     board.removeChild(board.firstChild);
@@ -292,6 +301,7 @@ function removeSettingsPage() {
 }
 
 function resumeGame() {
+  document.onkeydown = checkKey;
   gridSize = currentGame.tileArray.length;
   winningLevel = currentGame.goal;
   score = currentGame.score;
@@ -306,7 +316,9 @@ function resumeGame() {
   }
   getHighScore();
   updateBoard();
+  winnerCheck();
 }
+
 function getHighScore() {
   let highScore = highScoreArray[winningLevel] || 0;
   document.querySelector("#highscore").innerText = highScore;
@@ -322,7 +334,6 @@ function setHighScore() {
 
 // add handling for settings
 settings.addEventListener("click", toggleSettings);
-document.onkeydown = checkKey;
 
 if (
   localHighscore === undefined ||
