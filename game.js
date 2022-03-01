@@ -7,19 +7,24 @@ let tileArray = []; // 2D array to reflect the value of each tile
 let winningLevel = 11; //  11-2048   10-1024   9-512   8-256   7-128   6-64
 let moveCounter = 0; //move counter
 let score = 0; // score counter
+let currentGame = { moves: 0, score: 0, goal: 0, tileArray: 0 };
+const localStorage = window.localStorage;
+const localGame = localStorage.currentGame;
+
 const banner = document.querySelector("#banner"); //banner is used to display winner or game over message
+const statusBar = document.querySelector("#statusbar");
+const settings = document.querySelector("#settings");
+const board = document.querySelector(".board");
 
 //----------FUNCTIONS----------//
 
-function createDiv(y, x) {
+function createDiv(y, x, value) {
   // Create .tile divisions with id tile coordinates and append to .board
   let tile = document.createElement("div");
-  tile.innerText = 0;
+  tile.innerText = 2 ** value;
   tile.className = "tile";
   tile.id = `tile${y}${x}`;
-  let xArray = [];
-  for (let i = 0; i < gridSize; i++) xArray.push(0);
-  tileArray[y] = xArray;
+
   document.querySelector(".board").append(tile);
 }
 
@@ -148,6 +153,12 @@ function updateBoard() {
   }
   document.querySelector("#moves").innerText = moveCounter; // update moveCounter
   document.querySelector("#score").innerText = score; //update score
+  document.querySelector("#goal").innerText = 2 ** winningLevel; //update score
+  currentGame.moves = moveCounter;
+  currentGame.score = score;
+  currentGame.goal = winningLevel;
+  currentGame.tileArray = tileArray;
+  localStorage.setItem("currentGame", JSON.stringify(currentGame));
 }
 
 function gameOverCheck() {
@@ -175,9 +186,8 @@ function winnerCheck() {
   }
 }
 
-function setUpBoard() {
+function newGame() {
   //set up board based on tile selection, adds key listeners and sprawn initial tile
-  let board = document.querySelector(".board");
   // clears the existing board
   while (board.firstChild) {
     board.removeChild(board.firstChild);
@@ -188,15 +198,22 @@ function setUpBoard() {
 
   //Creating new div for each tile
   for (let y = 0; y < gridSize; y++) {
+    let xArray = [];
+    for (let i = 0; i < gridSize; i++) {
+      xArray.push(0);
+      tileArray[y] = xArray;
+    }
     for (let x = 0; x < gridSize; x++) {
-      createDiv(y, x);
+      createDiv(y, x, tileArray[y][x]);
     }
   }
 
-  // Add event listeners for keyboard events
-  document.onkeydown = checkKey;
   // sprawn initial tile
   sprawn();
+
+  moveCounter = 0;
+  score = 0;
+  updateBoard();
 }
 
 function toggleSettings() {
@@ -250,10 +267,12 @@ function toggleSettings() {
 
   let set = document.createElement("div");
   set.id = "setDiv";
-  set.innerText = "SET";
+  set.innerText = "NEW GAME";
   set.addEventListener("click", () => {
     document.querySelector("#goal").innerText = 2 ** winningLevel;
-    setUpBoard();
+    tileArray = [];
+    newGame();
+    removeSettingsPage();
   });
   settingPage.append(set);
   document.querySelector("#statusbar").append(settingPage);
@@ -264,11 +283,32 @@ function removeSettingsPage() {
   document.querySelector("#settingpage").remove();
   settings.addEventListener("click", toggleSettings);
 }
+
+function resumeGame() {
+  gridSize = currentGame.tileArray.length;
+  winningLevel = currentGame.goal;
+  score = currentGame.score;
+  moveCounter = currentGame.moves;
+  tileArray = currentGame.tileArray;
+  board.style["grid-template-columns"] = `repeat(${gridSize}, 1fr)`;
+
+  for (let y = 0; y < tileArray.length; y++) {
+    for (let x = 0; x < tileArray.length; x++) {
+      createDiv(y, x, tileArray[y][x]);
+    }
+  }
+  updateBoard();
+}
+
 //----------MAIN----------//
 
 // add handling for settings
-const statusBar = document.querySelector("#statusbar");
-const settings = document.querySelector("#settings");
 settings.addEventListener("click", toggleSettings);
+document.onkeydown = checkKey;
 
-setUpBoard();
+if (localGame === undefined || localGame === null || localGame.length === 0) {
+  newGame();
+} else {
+  currentGame = JSON.parse(localStorage.currentGame);
+  resumeGame();
+}
