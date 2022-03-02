@@ -49,7 +49,7 @@ h2 {
 }
 
 .setting-selector {
-  width: 10%;
+  width: 30%;
   border: 1px solid black;
   margin: 1.2em 0.5em;
   /* vertical-align: middle; */
@@ -119,16 +119,15 @@ h2 {
   z-index: 0;
   pointer-events: none;
 }
-@keyframes test {
-  0% {
-    opacity: 100%;
-    transform: translate(-50%, -50%) scale(1, 1);
-  }
 
-  100% {
-    opacity: 0%;
-    transform: translate(-50%, -50%) scale(2, 2);
-  }
+#gameModeRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.gameMode {
+  font-size: 1em;
+  line-height: 0.3em;
 }
 
 .tile {
@@ -197,4 +196,16 @@ h2 {
 .l14 {
   background-color: #ffee00;
   font-size: 1em;
+}
+
+@keyframes test {
+  0% {
+    opacity: 100%;
+    transform: translate(-50%, -50%) scale(1, 1);
+  }
+
+  100% {
+    opacity: 0%;
+    transform: translate(-50%, -50%) scale(2, 2);
+  }
 }

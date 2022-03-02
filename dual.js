@@ -391,11 +391,58 @@ function undo() {
     updateBoard();
   }
 }
+function getTouches(evt) {
+  return (
+    evt.touches || // browser API
+    evt.originalEvent.touches
+  ); // jQuery
+}
+
+function handleTouchStart(evt) {
+  const firstTouch = getTouches(evt)[0];
+  xDown = firstTouch.clientX;
+  yDown = firstTouch.clientY;
+}
+
+function handleTouchMove(evt) {
+  if (!xDown || !yDown) {
+    return;
+  }
+
+  var xUp = evt.touches[0].clientX;
+  var yUp = evt.touches[0].clientY;
+
+  var xDiff = xDown - xUp;
+  var yDiff = yDown - yUp;
+
+  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+    /*most significant*/
+    if (xDiff > 0) {
+      move("right", true);
+    } else {
+      /* left swipe */
+      move("left", true);
+    }
+  } else {
+    if (yDiff > 0) {
+      /* down swipe */
+      move("down", true);
+    } else {
+      /* up swipe */
+      move("up", true);
+    }
+  }
+  /* reset values */
+  xDown = null;
+  yDown = null;
+}
 
 //----------MAIN----------//
 
 // add handling for settings
 settings.addEventListener("click", toggleSettings);
+// document.addEventListener("touchstart", handleTouchStart, false);
+document.addEventListener("touchmove", handleTouchMove, false);
 
 if (
   localHighscore === undefined ||
@@ -415,3 +462,5 @@ if (localGame === undefined || localGame === null || localGame.length === 0) {
   currentGame = JSON.parse(localStorage.currentGame);
   resumeGame();
 }
+
+// touch codes below

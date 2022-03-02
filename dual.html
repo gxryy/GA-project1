@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>2048</title>
+  </head>
+  <body>
+    <div class="header">
+      <h1>2048 Game</h1>
+    </div>
+    <div class="main">
+      <div id="statusbar">
+        <!-- statusbar consist of both status rows and setting page -->
+        <div id="status">
+          <!-- status div houses both the status rows -->
+          <div class="statusRow">
+            <!-- first status row -->
+            <h2 id="settings" class="button">Settings</h2>
+            <h2 class="label">Goal:</h2>
+            <h2 id="goal" class="value">2048</h2>
+            <h2 class="label">Highscore:</h2>
+            <h2 id="highscore" class="value">0</h2>
+          </div>
+          <div class="statusRow">
+            <!-- 2nd status row -->
+            <h2 class="label">Moves:</h2>
+            <h2 id="moves" class="value">0</h2>
+            <h2 class="label">Score:</h2>
+            <h2 id="score" class="value">0</h2>
+          </div>
+        </div>
+        <!-- settings page will be appended here -->
+      </div>
+      <div id="banner">
+        <p id="bannerText">Welcome!</p>
+        <p id="bannerScoreLabel"></p>
+        <p id="bannerScore"></p>
+        <p id="replay" class="button">New Game</p>
+      </div>
+      <div class="board">
+        <!-- this is the board div -->
+      </div>
+      <div id="direction"></div>
+    </div>
+
+    <div class="footer"><h6>Footer</h6></div>
+
+    <script src="dual.js" charset="UFT-8"></script>
+  </body>
+</html>

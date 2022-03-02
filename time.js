@@ -7,14 +7,16 @@ let tileArray = []; // 2D array to reflect the value of each tile
 let winningLevel = 11; //  11-2048   10-1024   9-512   8-256   7-128   6-64
 let moveCounter = 0; //move counter
 let score = 0; // score counter
+let timer;
+let timeLeft = 60;
 let currentGame = { moves: 0, score: 0, goal: 0, tileArray: 0 };
-let highScoreArray = [];
+let highScore = 0;
 let prevTileArray = [];
 let gameModeArray = ["Classic", "Time Attack", "Dual"];
 let locationArray = ["index.html", "time.html", "dual.html"];
 const localStorage = window.localStorage;
 const localGame = localStorage.currentGame;
-const localHighscore = localStorage.highScore;
+const localHighscore = localStorage.highScoreTime;
 const banner = document.querySelector("#banner"); //banner is used to display winner or game over message
 const statusBar = document.querySelector("#statusbar");
 const settings = document.querySelector("#settings");
@@ -58,6 +60,8 @@ function checkKey(e) {
 
 function move(dir, playerMove) {
   // this function takes the input of the move and check if it is a player move or computer move
+  if (moveCounter === 0) startTimer();
+
   let hasMove = false; // hasMove is to determine if there is a change in tile positions after the move.
   prevTileArray = JSON.parse(JSON.stringify(tileArray));
 
@@ -93,11 +97,7 @@ function move(dir, playerMove) {
       moveCounter++; // increse move counter
       sprawn(); // sprawn a new tile
       showDirection(dir);
-      winnerCheck(); // check if there are any winning tiles
     } else if (checkEmptyTile().length === 0) gameOverCheck(); //if there are no empty tiles, execute gameOverCheck
-  } else {
-    // if its a computer move
-    return hasMove; // return if there is move or not
   }
 }
 
@@ -190,40 +190,55 @@ function updateBoard() {
   localStorage.setItem("currentGame", JSON.stringify(currentGame));
 }
 
-function gameOverCheck() {
-  // checks if any moves are possible, otherwise game over
-  let possibleToMove = false;
-  let moves = ["up", "down", "left", "right"];
-  for (let i = 0; i < moves.length; i++) {
-    if (move(moves[i], false)) possibleToMove = true;
-  }
-  if (possibleToMove == false) {
-    banner.querySelector("#bannerText").innerText = "GAME OVER!";
-    banner.style.display = "block";
-    document.querySelector("#bannerScoreLabel").innerText = `Score: ${score}`;
-    document.onkeydown = null;
-    document.querySelector("#replay").addEventListener("click", newGame);
-    setHighScore();
+function updateTimer() {
+  timeLeft = timeLeft - 1;
+  var t = document.querySelector("#timer");
+  if (timeLeft >= 0) {
+    t.innerText = timeLeft;
+  } else {
+    gameOver();
   }
 }
 
-function winnerCheck() {
-  // check for winner by looping through tileArray
-  for (let i = 0; i < gridSize; i++) {
-    for (let j = 0; j < gridSize; j++) {
-      if (tileArray[i][j] >= winningLevel) {
-        banner.querySelector("#bannerText").innerText = "YOU WIN!";
-        banner.style.display = "block";
-        document.querySelector(
-          "#bannerScoreLabel"
-        ).innerText = `Score: ${score}`;
-        document.onkeydown = null;
-        document.querySelector("#replay").addEventListener("click", newGame);
-        setHighScore();
-      } else continue;
-    }
-  }
+function startTimer() {
+  // setInterval is a built-in function that will call the given function
+  // every N milliseconds (1 second = 1000 ms)
+  timer = setInterval(updateTimer, 1000);
+
+  // It will be a whole second before the time changes, so we'll call the update
+  // once ourselves
+  updateTimer();
 }
+
+function gameOver() {
+  banner.querySelector("#bannerText").innerText = "TIME UP!";
+  banner.style.display = "block";
+  document.querySelector("#bannerScoreLabel").innerText = `Score: ${score}`;
+  document.onkeydown = null;
+  document.querySelector("#replay").addEventListener("click", reload);
+  setHighScore();
+}
+function reload() {
+  location.reload();
+}
+
+// function winnerCheck() {
+//   // check for winner by looping through tileArray
+//   for (let i = 0; i < gridSize; i++) {
+//     for (let j = 0; j < gridSize; j++) {
+//       if (tileArray[i][j] >= winningLevel) {
+//         banner.querySelector("#bannerText").innerText = "YOU WIN!";
+//         banner.style.display = "block";
+//         document.querySelector(
+//           "#bannerScoreLabel"
+//         ).innerText = `Score: ${score}`;
+//         document.onkeydown = null;
+//         document.querySelector("#replay").addEventListener("click", newGame);
+//         setHighScore();
+//       } else continue;
+//     }
+//   }
+// }
 
 function newGame() {
   //set up board based on tile selection, adds key listeners and sprawn initial tile
@@ -260,34 +275,13 @@ function newGame() {
   updateBoard();
 }
 
-function resumeGame() {
-  document.onkeydown = checkKey;
-  gridSize = currentGame.tileArray.length;
-  winningLevel = currentGame.goal;
-  score = currentGame.score;
-  moveCounter = currentGame.moves;
-  tileArray = currentGame.tileArray;
-  board.style["grid-template-columns"] = `repeat(${gridSize}, 1fr)`;
-
-  for (let y = 0; y < tileArray.length; y++) {
-    for (let x = 0; x < tileArray.length; x++) {
-      createDiv(y, x, tileArray[y][x]);
-    }
-  }
-  getHighScore();
-  updateBoard();
-  winnerCheck();
-}
-
 function getHighScore() {
-  let highScore = highScoreArray[winningLevel] || 0;
   document.querySelector("#highscore").innerText = highScore;
 }
 
 function setHighScore() {
-  if (score > highScoreArray[winningLevel])
-    highScoreArray[winningLevel] = score;
-  localStorage.setItem("highScore", JSON.stringify(highScoreArray));
+  if (score > highScore) highScore = score;
+  localStorage.setItem("highScoreTime", highScore);
   getHighScore();
 }
 
@@ -317,60 +311,11 @@ function toggleSettings() {
   }
   settingPage.append(gameModeRow);
 
-  let gridDiv = document.createElement("div");
-  let gridLabel = (document.createElement("p").innerText = "Grid Size:");
-  let gridSelectorDiv = document.createElement("div");
-  gridSelectorDiv.style.display = "flex";
-  gridSelectorDiv.className = "selectorDiv";
-  for (let i = 3; i <= 8; i++) {
-    let box = document.createElement("div");
-    box.className = "setting-selector";
-    box.classList.add("button");
-    box.innerText = i;
-    box.display = "inline";
-    box.addEventListener("click", (event) => {
-      gridSize = event.target.innerText;
-      event.target.style.backgroundColor = "#c9986d";
-    });
-    gridSelectorDiv.append(box);
-  }
-  gridDiv.append(gridLabel);
-  gridDiv.append(gridSelectorDiv);
-  settingPage.append(gridDiv);
-
-  let winScoreDiv = document.createElement("div");
-  let winScoreLabel = (document.createElement("p").innerText =
-    "Winning Score:");
-  let winScoreSelectorDiv = document.createElement("div");
-  winScoreSelectorDiv.style.display = "flex";
-  winScoreSelectorDiv.className = "selectorDiv";
-  for (let i = 6; i <= 13; i++) {
-    let box = document.createElement("div");
-    box.className = "setting-selector";
-    box.classList.add("button");
-    box.innerText = 2 ** i;
-    box.display = "inline";
-    box.addEventListener("click", (event) => {
-      let winningScore = event.target.innerText;
-      event.target.style.backgroundColor = "#c9986d";
-      winningLevel = Math.log(winningScore) / Math.log(2);
-    });
-    winScoreSelectorDiv.append(box);
-  }
-  winScoreDiv.append(winScoreLabel);
-  winScoreDiv.append(winScoreSelectorDiv);
-  settingPage.append(winScoreDiv);
-
   let set = document.createElement("div");
   set.id = "setDiv";
   set.classList.add("button");
   set.innerText = "NEW GAME";
-  set.addEventListener("click", () => {
-    document.querySelector("#goal").innerText = 2 ** winningLevel;
-    tileArray = [];
-    newGame();
-    removeSettingsPage();
-  });
+  set.addEventListener("click", reload);
   settingPage.append(set);
   document.querySelector("#statusbar").append(settingPage);
 }
@@ -383,7 +328,7 @@ function removeSettingsPage() {
 
 function undo() {
   if (JSON.stringify(prevTileArray) == JSON.stringify(tileArray))
-    alert("Not allowed to consecutively do more than 1 undo!");
+    console.log("Not allowed to consecutively do more than 1 undo!");
   else {
     tileArray = JSON.parse(JSON.stringify(prevTileArray));
     moveCounter++;
@@ -403,15 +348,10 @@ if (
   localHighscore.length === 0
 ) {
   console.log(`there is no local highscore`);
-  highScoreArray = new Array(20).fill(0);
-  localStorage.setItem("highScore", JSON.stringify(highScoreArray));
+  highScore = 0;
+  localStorage.setItem("highScoreTime", highScore);
 } else {
-  highScoreArray = JSON.parse(localStorage.highScore);
+  highScore = localStorage.highScoreTime;
 }
 
-if (localGame === undefined || localGame === null || localGame.length === 0) {
-  newGame();
-} else {
-  currentGame = JSON.parse(localStorage.currentGame);
-  resumeGame();
-}
+newGame();
