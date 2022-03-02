@@ -107,6 +107,30 @@ h2 {
   height: 75vmin;
 }
 
+#direction {
+  position: absolute;
+  left: 50%;
+  top: 55vh;
+  font-size: 11em;
+  color: rgba(255, 255, 255, 0.9);
+  animation: test;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+  z-index: 0;
+  pointer-events: none;
+}
+@keyframes test {
+  0% {
+    opacity: 100%;
+    transform: translate(-50%, -50%) scale(1, 1);
+  }
+
+  100% {
+    opacity: 0%;
+    transform: translate(-50%, -50%) scale(2, 2);
+  }
+}
+
 .tile {
   /* border: 1px solid black; */
   border-radius: 0.3em;

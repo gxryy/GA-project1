@@ -90,12 +90,31 @@ function move(dir, playerMove) {
       // and move is valid
       moveCounter++; // increse move counter
       sprawn(); // sprawn a new tile
+      showDirection(dir);
       winnerCheck(); // check if there are any winning tiles
     } else if (checkEmptyTile().length === 0) gameOverCheck(); //if there are no empty tiles, execute gameOverCheck
   } else {
     // if its a computer move
     return hasMove; // return if there is move or not
   }
+}
+
+function showDirection(dir) {
+  console.log(`the direction is ${dir}`);
+  let directionCard = document.querySelector("#direction");
+  if (dir == "up") directionCard.innerHTML = "&#8593";
+  else if (dir == "down") directionCard.innerHTML = "&#8595";
+  else if (dir == "left") directionCard.innerHTML = "&#8592";
+  else if (dir == "right") directionCard.innerHTML = "&#8594";
+
+  reset_animation();
+}
+
+function reset_animation() {
+  var el = document.getElementById("direction");
+  el.style.animation = "none";
+  el.offsetHeight; /* trigger reflow */
+  el.style.animation = null;
 }
 
 function checkMerge(array) {
