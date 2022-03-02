@@ -151,14 +151,15 @@ function updateBoard() {
   // updates moves and score and 'redraws' the board with reference to tileArray
   for (let y = 0; y < gridSize; y++) {
     for (let x = 0; x < gridSize; x++) {
-      if (tileArray[y][x] != 0)
-        document.querySelector(`#tile${y}${x}`).innerText =
-          2 ** tileArray[y][x];
-      else if (tileArray[y][x] == 0)
-        document.querySelector(`#tile${y}${x}`).innerText = "";
+      let tile = document.querySelector(`#tile${y}${x}`);
+      if (tileArray[y][x] != 0) tile.innerText = 2 ** tileArray[y][x];
+      else if (tileArray[y][x] == 0) tile.innerText = "";
       else console.log(`error in update board`);
+      tile.className = `l${tileArray[y][x]}`;
+      tile.classList.add("tile");
     }
   }
+
   document.querySelector("#moves").innerText = moveCounter; // update moveCounter
   document.querySelector("#score").innerText = score; //update score
   document.querySelector("#goal").innerText = 2 ** winningLevel; //update score
@@ -287,10 +288,12 @@ function toggleSettings() {
   for (let i = 3; i <= 8; i++) {
     let box = document.createElement("div");
     box.className = "setting-selector";
+    box.classList.add("button");
     box.innerText = i;
     box.display = "inline";
     box.addEventListener("click", (event) => {
       gridSize = event.target.innerText;
+      event.target.style.backgroundColor = "#c9986d";
     });
     gridSelectorDiv.append(box);
   }
@@ -307,10 +310,12 @@ function toggleSettings() {
   for (let i = 6; i <= 13; i++) {
     let box = document.createElement("div");
     box.className = "setting-selector";
+    box.classList.add("button");
     box.innerText = 2 ** i;
     box.display = "inline";
     box.addEventListener("click", (event) => {
       let winningScore = event.target.innerText;
+      event.target.style.backgroundColor = "#c9986d";
       winningLevel = Math.log(winningScore) / Math.log(2);
     });
     winScoreSelectorDiv.append(box);
@@ -321,6 +326,7 @@ function toggleSettings() {
 
   let set = document.createElement("div");
   set.id = "setDiv";
+  set.classList.add("button");
   set.innerText = "NEW GAME";
   set.addEventListener("click", () => {
     document.querySelector("#goal").innerText = 2 ** winningLevel;
