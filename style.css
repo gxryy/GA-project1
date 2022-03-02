@@ -72,7 +72,6 @@ h2 {
   top: 33%;
   width: 100%;
   line-height: 0;
-  font-family: Arial, Helvetica, sans-serif;
   opacity: 90%;
 }
 
@@ -104,8 +103,8 @@ h2 {
   padding: 0.8em;
   grid-gap: 2%;
   margin: auto;
-  width: 70vh;
-  height: 70vh;
+  width: 75vmin;
+  height: 75vmin;
 }
 
 .tile {
