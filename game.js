@@ -54,33 +54,6 @@ function checkKey(e) {
   // calls move function with the respective direction. 2nd arg = true as it is from a keyboard event
 }
 
-function checkMerge(array) {
-  // check if the input array has adjacent elements of the same value
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] !== 0) {
-      // not appliable to level 0
-      if (array[i] === array[i + 1]) {
-        // if current element has the same value as next element
-        array[i]++; // increase the level of current element
-        array[i + 1] = 0; // remove the next element
-        score += 2 ** array[i]; // update the score as there is a merge
-      }
-    }
-  }
-  return array; // returns the 'merged' array
-}
-
-function gravity(array) {
-  // flushes input array by removing and pushing 0s to end of array
-  for (let i = array.length; i >= 0; i--) {
-    if (array[i] === 0) {
-      array.splice(i, 1);
-      array.push(0);
-    }
-  }
-  return array;
-}
-
 function move(dir, playerMove) {
   // this function takes the input of the move and check if it is a player move or computer move
   let hasMove = false; // hasMove is to determine if there is a change in tile positions after the move.
@@ -123,6 +96,33 @@ function move(dir, playerMove) {
     // if its a computer move
     return hasMove; // return if there is move or not
   }
+}
+
+function checkMerge(array) {
+  // check if the input array has adjacent elements of the same value
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== 0) {
+      // not appliable to level 0
+      if (array[i] === array[i + 1]) {
+        // if current element has the same value as next element
+        array[i]++; // increase the level of current element
+        array[i + 1] = 0; // remove the next element
+        score += 2 ** array[i]; // update the score as there is a merge
+      }
+    }
+  }
+  return array; // returns the 'merged' array
+}
+
+function gravity(array) {
+  // flushes input array by removing and pushing 0s to end of array
+  for (let i = array.length; i >= 0; i--) {
+    if (array[i] === 0) {
+      array.splice(i, 1);
+      array.push(0);
+    }
+  }
+  return array;
 }
 
 function checkEmptyTile() {
@@ -239,6 +239,37 @@ function newGame() {
   updateBoard();
 }
 
+function resumeGame() {
+  document.onkeydown = checkKey;
+  gridSize = currentGame.tileArray.length;
+  winningLevel = currentGame.goal;
+  score = currentGame.score;
+  moveCounter = currentGame.moves;
+  tileArray = currentGame.tileArray;
+  board.style["grid-template-columns"] = `repeat(${gridSize}, 1fr)`;
+
+  for (let y = 0; y < tileArray.length; y++) {
+    for (let x = 0; x < tileArray.length; x++) {
+      createDiv(y, x, tileArray[y][x]);
+    }
+  }
+  getHighScore();
+  updateBoard();
+  winnerCheck();
+}
+
+function getHighScore() {
+  let highScore = highScoreArray[winningLevel] || 0;
+  document.querySelector("#highscore").innerText = highScore;
+}
+
+function setHighScore() {
+  if (score > highScoreArray[winningLevel])
+    highScoreArray[winningLevel] = score;
+  localStorage.setItem("highScore", JSON.stringify(highScoreArray));
+  getHighScore();
+}
+
 function toggleSettings() {
   // display and remove the settings panel. sets the respective settings
   // changing existing listener to close panel instead
@@ -305,37 +336,6 @@ function removeSettingsPage() {
   settings.removeEventListener("click", removeSettingsPage);
   document.querySelector("#settingpage").remove();
   settings.addEventListener("click", toggleSettings);
-}
-
-function resumeGame() {
-  document.onkeydown = checkKey;
-  gridSize = currentGame.tileArray.length;
-  winningLevel = currentGame.goal;
-  score = currentGame.score;
-  moveCounter = currentGame.moves;
-  tileArray = currentGame.tileArray;
-  board.style["grid-template-columns"] = `repeat(${gridSize}, 1fr)`;
-
-  for (let y = 0; y < tileArray.length; y++) {
-    for (let x = 0; x < tileArray.length; x++) {
-      createDiv(y, x, tileArray[y][x]);
-    }
-  }
-  getHighScore();
-  updateBoard();
-  winnerCheck();
-}
-
-function getHighScore() {
-  let highScore = highScoreArray[winningLevel] || 0;
-  document.querySelector("#highscore").innerText = highScore;
-}
-
-function setHighScore() {
-  if (score > highScoreArray[winningLevel])
-    highScoreArray[winningLevel] = score;
-  localStorage.setItem("highScore", JSON.stringify(highScoreArray));
-  getHighScore();
 }
 
 function undo() {
