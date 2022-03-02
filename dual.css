@@ -1,0 +1,238 @@
+:root {
+  text-align: center;
+  line-height: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  /* overflow: hidden; */
+}
+
+.header {
+  background-color: azure;
+  height: 8%;
+  margin: none;
+}
+
+.main {
+  background-color: beige;
+  height: 85%;
+}
+
+.footer {
+  background-color: darkgrey;
+  height: 5%;
+}
+
+/* MAIN SECTION */
+
+.gameArea {
+  display: flex;
+  justify-content: space-around;
+}
+
+#statusbar {
+  background-color: rgba(212, 211, 142, 0.6);
+  padding: 0em 1em;
+}
+
+.statusRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.label {
+  /* labelling of the statusrow labels like 'settings', 'goals','highscore' eac */
+  text-align: right;
+  padding-right: 1em;
+}
+#playerLabel {
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+h2 {
+  display: inline;
+  font-size: 1.3em;
+  text-align: left;
+  flex-basis: 30%;
+}
+
+.selectorDiv {
+  justify-content: center;
+}
+
+.setting-selector {
+  width: 30%;
+  border: 1px solid black;
+  margin: 1.2em 0.5em;
+  /* vertical-align: middle; */
+  line-height: 2em;
+  border-radius: 0.8em;
+}
+
+#setDiv {
+  /* style for the new game button*/
+  line-height: 2em;
+  padding-bottom: 0.5em;
+  font-size: 2em;
+  border-radius: 2em;
+}
+
+#banner {
+  display: none;
+  background-color: white;
+  position: absolute;
+  top: 33%;
+  width: 100%;
+  line-height: 0;
+  opacity: 90%;
+}
+
+#banner1,
+#banner2 {
+  display: none;
+  background-color: white;
+  position: relative;
+  font-weight: bold;
+  width: 70%;
+  height: 25%;
+  padding: 0%;
+  transform: translateY(-200%) translateX(20%);
+  line-height: 1em;
+  opacity: 90%;
+  overflow: hidden;
+  border-radius: 2em;
+}
+
+#bannerText {
+  font-size: 350%;
+  letter-spacing: 0.3em;
+}
+
+#bannerScoreLabel {
+  font-size: 1.5em;
+}
+
+#replay {
+  font-size: 2em;
+  line-height: 1.5em;
+  /* border: 1px solid black; */
+  border-radius: 1em;
+}
+
+.button:hover {
+  background-color: #c9986d;
+  cursor: pointer;
+}
+
+.board {
+  background-color: #c2ad98;
+  border-radius: 1em;
+  display: grid;
+  padding: 0.8em;
+  grid-gap: 2%;
+  margin: auto;
+  width: 40vmin; /*set to 60*/
+  height: 40vmin;
+}
+
+#direction {
+  position: absolute;
+  left: 50%;
+  top: 55vh;
+  font-size: 11em;
+  color: rgba(255, 255, 255, 0.9);
+  animation: test;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#gameModeRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.gameMode {
+  font-size: 1em;
+  line-height: 0.3em;
+}
+
+.tile {
+  /* border: 1px solid black; */
+  border-radius: 0.3em;
+  display: grid;
+  justify-items: center;
+  overflow: hidden;
+  align-items: center;
+  font-size: 1.7em;
+  font-weight: bold;
+  color: black;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.l0 {
+  background-color: #cec5bd;
+}
+.l1 {
+  background-color: #f1e3d5;
+}
+.l2 {
+  background-color: #eee1c9;
+}
+.l3 {
+  background-color: #f3b27a;
+}
+.l4 {
+  background-color: #f69664;
+}
+.l5 {
+  background-color: #f77c5f;
+}
+.l6 {
+  background-color: #f75f3b;
+}
+.l7 {
+  background-color: #edd073;
+  font-size: 1.2em;
+}
+.l8 {
+  background-color: #edcc62;
+  font-size: 1.2em;
+}
+.l9 {
+  background-color: #edc950;
+  font-size: 1.2em;
+}
+.l10 {
+  background-color: #edc53f;
+  font-size: 1em;
+}
+.l11 {
+  background-color: #ebba1b;
+  font-size: 1em;
+}
+.l12 {
+  background-color: #ffc60b;
+  font-size: 1em;
+}
+.l13 {
+  background-color: #fdc304;
+  font-size: 1em;
+}
+.l14 {
+  background-color: #ffee00;
+  font-size: 1em;
+}
+
+@keyframes test {
+  0% {
+    opacity: 100%;
+    transform: translate(-50%, -50%) scale(1, 1);
+  }
+
+  100% {
+    opacity: 0%;
+    transform: translate(-50%, -50%) scale(2, 2);
+  }
+}

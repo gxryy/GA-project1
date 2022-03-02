@@ -97,7 +97,7 @@ function move(dir, playerMove) {
       moveCounter++; // increse move counter
       sprawn(); // sprawn a new tile
       showDirection(dir);
-    } else if (checkEmptyTile().length === 0) gameOverCheck(); //if there are no empty tiles, execute gameOverCheck
+    }
   }
 }
 
