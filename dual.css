@@ -130,8 +130,8 @@ h2 {
   padding: 0.8em;
   grid-gap: 2%;
   margin: auto;
-  width: 40vmin; /*set to 60*/
-  height: 40vmin;
+  width: 60vmin; /*set to 60*/
+  height: 60vmin;
 }
 
 #direction {

@@ -82,10 +82,10 @@ function move(dir, playerMove) {
     for (let j = 0; j < gridSize; j++) {
       if (dir === "up" || dir === "down") {
         if (tileArray[j][i] != directionArray[j]) hasMove = true; // setting the hasmove condition if there is tile movement
-        tileArray[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
+        if (playerMove) tileArray[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
       } else if (dir === "left" || dir === "right") {
         if (tileArray[i][j] != directionArray[j]) hasMove = true;
-        tileArray[i][j] = directionArray[j]; // similar, leftright
+        if (playerMove) tileArray[i][j] = directionArray[j]; // similar, leftright
       }
     }
   }

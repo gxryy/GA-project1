@@ -111,18 +111,18 @@ function move(dir, playerMove, player) {
       if (player === 1) {
         if (dir === "up" || dir === "down") {
           if (tileArray1[j][i] != directionArray[j]) hasMove = true; // setting the hasmove condition if there is tile movement
-          tileArray1[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
+          if (playerMove) tileArray1[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
         } else if (dir === "left" || dir === "right") {
           if (tileArray1[i][j] != directionArray[j]) hasMove = true;
-          tileArray1[i][j] = directionArray[j]; // similar, leftright
+          if (playerMove) tileArray1[i][j] = directionArray[j]; // similar, leftright
         }
       } else if (player === 2) {
         if (dir === "up" || dir === "down") {
           if (tileArray2[j][i] != directionArray[j]) hasMove = true; // setting the hasmove condition if there is tile movement
-          tileArray2[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
+          if (playerMove) tileArray2[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
         } else if (dir === "left" || dir === "right") {
           if (tileArray2[i][j] != directionArray[j]) hasMove = true;
-          tileArray2[i][j] = directionArray[j]; // similar, leftright
+          if (playerMove) tileArray2[i][j] = directionArray[j]; // similar, leftright
         }
       }
     }

@@ -57,6 +57,8 @@ function checkKey(e) {
 }
 
 function move(dir, playerMove) {
+  console.log(`move starting`);
+  console.table(tileArray);
   // this function takes the input of the move and check if it is a player move or computer move
   let hasMove = false; // hasMove is to determine if there is a change in tile positions after the move.
   prevTileArray = JSON.parse(JSON.stringify(tileArray));
@@ -78,15 +80,16 @@ function move(dir, playerMove) {
     for (let j = 0; j < gridSize; j++) {
       if (dir === "up" || dir === "down") {
         if (tileArray[j][i] != directionArray[j]) hasMove = true; // setting the hasmove condition if there is tile movement
-        tileArray[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
+        if (playerMove) tileArray[j][i] = directionArray[j]; // updating tileArray with new merged and gravitied column array (updown)
       } else if (dir === "left" || dir === "right") {
         if (tileArray[i][j] != directionArray[j]) hasMove = true;
-        tileArray[i][j] = directionArray[j]; // similar, leftright
+        if (playerMove) tileArray[i][j] = directionArray[j]; // similar, leftright
       }
     }
   }
 
   if (playerMove) {
+    console.log(`player move`);
     // if its a player move
     if (hasMove) {
       // and move is valid
@@ -96,9 +99,13 @@ function move(dir, playerMove) {
       winnerCheck(); // check if there are any winning tiles
     } else if (checkEmptyTile().length === 0) gameOverCheck(); //if there are no empty tiles, execute gameOverCheck
   } else {
+    console.log(`computer move`);
     // if its a computer move
     return hasMove; // return if there is move or not
   }
+
+  console.log(`move ending`);
+  console.table(tileArray);
 }
 
 function showDirection(dir) {
