@@ -87,7 +87,6 @@ function move(dir, playerMove) {
   }
 
   if (playerMove) {
-    console.log(`player move`);
     // if its a player move
     if (hasMove) {
       // and move is valid
@@ -97,7 +96,6 @@ function move(dir, playerMove) {
       winnerCheck(); // check if there are any winning tiles
     } else if (checkEmptyTile().length === 0) gameOverCheck(); //if there are no empty tiles, execute gameOverCheck
   } else {
-    console.log(`computer move`);
     // if its a computer move
     return hasMove; // return if there is move or not
   }

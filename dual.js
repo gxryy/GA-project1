@@ -439,6 +439,8 @@ function toggleSettings() {
     tileArray1 = [];
     tileArray2 = [];
     newGame();
+    document.querySelector("#banner1").style = "none";
+    document.querySelector("#banner2").style = "none";
     removeSettingsPage();
   });
   settingPage.append(set);
