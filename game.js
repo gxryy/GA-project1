@@ -57,8 +57,6 @@ function checkKey(e) {
 }
 
 function move(dir, playerMove) {
-  console.log(`move starting`);
-  console.table(tileArray);
   // this function takes the input of the move and check if it is a player move or computer move
   let hasMove = false; // hasMove is to determine if there is a change in tile positions after the move.
   prevTileArray = JSON.parse(JSON.stringify(tileArray));
@@ -103,9 +101,6 @@ function move(dir, playerMove) {
     // if its a computer move
     return hasMove; // return if there is move or not
   }
-
-  console.log(`move ending`);
-  console.table(tileArray);
 }
 
 function showDirection(dir) {
