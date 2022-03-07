@@ -3,6 +3,12 @@
   line-height: 0;
   font-family: Arial, Helvetica, sans-serif;
   overflow: hidden;
+  top: 0%;
+  left: 0%;
+}
+
+body {
+  overflow-y: hidden;
 }
 
 .header {
@@ -13,12 +19,13 @@
 
 .main {
   background-color: beige;
-  height: 85%;
+  height: 80%;
 }
 
 .footer {
   background-color: darkgrey;
   height: 5%;
+  line-height: 0%;
 }
 
 /* MAIN SECTION */
@@ -130,8 +137,8 @@ h2 {
   padding: 0.8em;
   grid-gap: 2%;
   margin: auto;
-  width: 60vmin; /*set to 60*/
-  height: 60vmin;
+  width: 55vmin; /*set to 60*/
+  height: 55vmin;
 }
 
 #direction {
